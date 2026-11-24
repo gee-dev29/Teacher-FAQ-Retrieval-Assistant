@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from faq_assistant.index_builder import build_index
 from faq_assistant.search import search
 from faq_assistant.unresolved_log import log_unresolved_question
+from faq_assistant.api_answer import get_api_answer
 
 app = Flask(__name__)
 document_index = build_index()
@@ -25,9 +26,11 @@ def search_endpoint():
             "source": None,
         })
 
+    answer = get_api_answer(question, result["text"])
+
     return jsonify({
         "found": True,
-        "answer": result["text"],
+        "answer": answer,
         "source": result["source"],
     })
 
